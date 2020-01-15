@@ -11,31 +11,26 @@
         crossorigin="anonymous"></script>
     </head>
     <body>
-        <form method="POST" id="form_addquestion" action="http://localhost:3001/admin/newquest" >
-            <input type="text" name="question" placeholder="Enter Question" /><br/>
+        <form method="POST" id="form_addquestion" enctype="multipart/form-data" action="http://localhost:3001/admin/newquest" >
+            <input type="text" name="question" placeholder="Enter Question" />
+            <input type="file" name="questimg" /><br/>
             <div id="boxarea" >
-                <input type="text" id="1" name="answers[]" placeholder="Answer 1" /><br/>
+                <input type="text" id="1" name="answers[]" placeholder="Answer 1" />
+                <input type="file" name="1" />
+                <br/>
             </div>
             <button type="button" id="addbox" onclick="createBox()" >+</button>
-                <input type="text" name="correct" placeholder="correct answer"/><br/>
+            <input type="text" name="correct" placeholder="correct answer"/><br/>
             <input type="submit" value="Add" />
         </form>
     <script type="text/javascript">
     var count = 1;
-    var inputdata = [];
     function createBox(){
-        var boxarea = document.getElementById("boxarea");
-        inputdata = [];
-        for(var i=0;i<count;i++){
-            inputdata.push(document.getElementById("" + (i+1)).value);
-        }
         count++;
-        var code = '<input type="text" id="' + count + '" name="answers[]" placeholder="Answer ' + count + '"></input><br/>';
-        boxarea.innerHTML += code;
-        for(i=0;i<count-1;i++){
-            document.getElementById("" + (i+1)).value = inputdata[i];
-        }
-        return false;
+        var code1 = '<input type="text" id="' + count + '" name="answers[]" placeholder="Answer ' + count + '" />';
+        var code2 = '<input type="file" id="img' + count + '" name="' + count + '" /><br/>';
+        $("#boxarea").append(code1);
+        $("#boxarea").append(code2);
     }
     $("#form_addquestion").ajaxForm({
         url: 'http://localhost:3001/admin/newquest', 
