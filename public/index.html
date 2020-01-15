@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Add a question</title>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+        <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" 
+        integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" 
+        crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <form method="POST" id="form_addquestion" action="http://localhost:3001/admin/newquest" >
+            <input type="text" name="question" placeholder="Enter Question" /><br/>
+            <div id="boxarea" >
+                <input type="text" id="1" name="answers[]" placeholder="Answer 1" /><br/>
+            </div>
+            <button type="button" id="addbox" onclick="createBox()" >+</button>
+                <input type="text" name="correct" placeholder="correct answer"/><br/>
+            <input type="submit" value="Add" />
+        </form>
+    <script type="text/javascript">
+    var count = 1;
+    var inputdata = [];
+    function createBox(){
+        var boxarea = document.getElementById("boxarea");
+        inputdata = [];
+        for(var i=0;i<count;i++){
+            inputdata.push(document.getElementById("" + (i+1)).value);
+        }
+        count++;
+        var code = '<input type="text" id="' + count + '" name="answers[]" placeholder="Answer ' + count + '"></input><br/>';
+        boxarea.innerHTML += code;
+        for(i=0;i<count-1;i++){
+            document.getElementById("" + (i+1)).value = inputdata[i];
+        }
+        return false;
+    }
+    $("#form_addquestion").ajaxForm({
+        url: 'http://localhost:3001/admin/newquest', 
+        type: 'post',
+        success: onAddQuestion
+    })
+    function onAddQuestion(res){
+        console.log(res);
+    }
+    </script>
+    </body>
+</html>
