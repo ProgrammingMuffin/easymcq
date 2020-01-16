@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 const newquest = require('./routes/newquest');
 const getquest = require('./routes/getquest');
+const createuser = require('./routes/createuser');
 const multer = require('multer');
 
 
@@ -20,6 +21,7 @@ app.use(multer({dest: './uploads/images'}).any());
 
 app.use("/admin", newquest);
 app.use("/admin", getquest);
+app.use("/user", createuser);
 
 
 app.listen(port, () => { console.log("congratulations, your server is running on port " + port + " " + __dirname) });

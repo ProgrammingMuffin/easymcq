@@ -2,6 +2,7 @@ const express = require('express');
 const Sequelize = require('sequelize');
 const VARS = require('../VARS')();
 const router = express.Router();
+const multer = require('multer');
 const modelAnswer = require('../models/answer');
 const modelQuestion = require('../models/question');
 const modelQuestionLibrary = require('../models/questionlibrary');
@@ -43,10 +44,20 @@ const newAnswer = (inputanswer, correct_flag) => {
 }
 
 const newAnswerTransaction = (answers, correct_answer, files) => {
-    return orm.transaction((transact) => {
-        flag = 0;
-        let ans_list = [];
-        console.log(files)
+    // return orm.transaction((transact) => {
+    //     flag = 0;
+    //     let ans_list = [];
+    //     console.log(files)
+    //     answers.forEach((ans) => {
+    //         if(ans == correct_answer){
+    //             flag = 1;
+    //         } else {
+    //             flag = 0;
+    //         }
+    //         ans_list.push(newAnswer(ans, flag));
+    //     })
+    //     return ans_list
+    // });
         answers.forEach((ans) => {
             if(ans == correct_answer){
                 flag = 1;
@@ -56,7 +67,6 @@ const newAnswerTransaction = (answers, correct_answer, files) => {
             ans_list.push(newAnswer(ans, flag));
         })
         return ans_list
-    });
 }
 
 const pushQuestionLibrary = (quest_id, ans_id) => {
@@ -72,7 +82,7 @@ const addQuestionImage = (quest_id, img) => {
 const addAnswerImage = (ans_id, img) => {
     new_name = "a" + ans_id + path.extname(img.originalname);
     moveFileToDir(img.path, "uploads/images/" + new_name);
-    AnswerImage.create({ans_id: ans_id, imagename: new_name});
+    return AnswerImage.create({ans_id: ans_id, imagename: new_name});
 }
 
 //returns question id if the new question is created
@@ -83,33 +93,51 @@ const newQuest = (inputquestion, answers, correct_answer, files) => {
                 addQuestionImage(quest_id.get('quest_id'), img)
             }
         })
-        newAnswerTransaction(answers, correct_answer, files).then(
-            (result) => {
-                var i = 1; //initiating here cuz we need to iterate over every answer ID to insert an image there..
-                result.forEach(res => {
-                    res.then(row => {
-                        pushQuestionLibrary(quest_id.get('quest_id'), row.get('ans_id')); //Push to QuestionLibrary Table
-                        files.forEach(img => {
-                            if(img.fieldname == ("" + i)){ //to convert it into a string
-                                addAnswerImage(row.get('ans_id'), img);
-                            }
-                            console.log(i)
-                        })
-                        i++;
-                    });
-                })
+        // newAnswerTransaction(answers, correct_answer, files).then(
+        //     (result) => {
+        //         var i = 1; //initiating here cuz we need to iterate over every answer ID to insert an image there..
+        //         result.forEach(res => {
+        //             res.then(row => {
+        //                 pushQuestionLibrary(quest_id.get('quest_id'), row.get('ans_id')); //Push to QuestionLibrary Table
+        //                 files.forEach(img => {
+        //                     if(img.fieldname == ("" + i)){ //to convert it into a string
+        //                         addAnswerImage(row.get('ans_id'), img);
+        //                     }
+        //                     console.log(i)
+        //                 })
+        //                 i++;
+        //             });
+        //         })
+        //     }
+        // )
+        answers.forEach(answer => {
+            i = 1;
+            if(answer == correct_answer){
+                flag = 1;
+            } else {
+                flag = 0;
             }
-        )
+            newAnswer(answer, flag).then(result => {
+                pushQuestionLibrary(quest_id.get('quest_id'), result.get('ans_id'));
+                files.forEach(img => {
+                    if(img.fieldname == ("" + i)){
+                        console.log(result.get('ans_id'));
+                        addAnswerImage(result.get('ans_id'), img).then(() => {
+                            console.log("successfully uploaded image: " + result.get('ans_id'));
+                        })
+                    }
+                })
+                i++;
+            });
+        })
     }).catch((err) => {
         console.log("Error: " + err)
         return false;
     })
 }
 
-
 router.post("/newquest", (req, res) => {
     newQuest(req.body.question, req.body.answers, req.body.correct, req.files);
-    console.log(req.files);
     res.status(200).send("Question Added!");
 });
 

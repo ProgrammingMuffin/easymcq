@@ -16,12 +16,12 @@ const QuestionImage = modelQuestionImage(orm);
 
 
 const getQuestions = (offset, limit) => {
-    
+    return Question.findAll({offset: offset, limit: limit});
 }
 
 const getRowBrief = (offset, limit) => {
     quest_prom = getQuestions(offset, limit);
-    console.log(quest_prom);
+    return quest_prom;
 }
 
 
@@ -34,7 +34,13 @@ router.get("/getquest/:page/:limit", (req, res) => {
     //     console.log(result);
     //     res.status(200).send("Done.");
     // });
-    getRowBrief(offset, limit);
+    result = getRowBrief(offset, limit);
+    result.then(vals => {
+        vals.forEach(val => {
+            //Each of these "val" is a question.. has id, etc.. fetched with .get("quest_id") etc.
+            //make a template for this.
+        });
+    })
 });
 
 module.exports = router;
