@@ -37,9 +37,9 @@ router.get("/getquest/:page/:limit", (req, res) => {
     result = getRowBrief(offset, limit);
     result.then(vals => {
         vals.forEach(val => {
-            res.write(val);
+            //Each of these "val" is a question.. has id, etc.. fetched with .get("quest_id") etc.
+            //make a template for this.
         });
-        res.end()
     })
 });
 
