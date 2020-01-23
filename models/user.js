@@ -8,7 +8,7 @@ module.exports = (orm) => {
             primaryKey: true,
             autoIncrement: true
         },
-        username: {
+        password: {
             type: Sequelize.STRING,
             allowNull: false
         },
