@@ -6,11 +6,6 @@ const model = require('../model');
 const http = require('http');
 const request = require('sync-request');
 
-const orm = new Sequelize(VARS.db, VARS.username, VARS.password, {
-    host: VARS.host,
-    dialect: VARS.dialect
-})
-
 
 const UserQuestions = model.UserQuestions;
 const Question = model.Question;
@@ -20,8 +15,12 @@ const Answer = model.Answer;
 
 
 //get the quest_id
-const getQuestion = (quest_num) => {
+const getQuestionID = (quest_num) => {
     return UserQuestions.findOne({where: {test_id: 4}, offset: (quest_num-1), limit: 1});
+}
+
+const getQuestionText = (quest_id) => {
+    return QuestionLibrary.findOne({where: {quest_id: quest_id}, include: [{model: Question, as: 'Question'}]});
 }
 
 //get the answers
@@ -35,17 +34,17 @@ router.get("/:testid/:quest", (req, res) => {
     var quest_num = parseInt(req.params.quest) - 1;
     var quest_id = 161;
 
-    getQuestion(2).then(quest => {
-        getAnswers(quest.get('quest_id')).then((answer) => {
-            answer.forEach(ans => {
-                console.log(ans.get('Answer'));
-                console.log(ans.get('Question'));
-                console.log("\n\n\n");
+    getQuestionID(2).then(quest => {
+        getQuestionText(quest.get('quest_id')).then(question => {
+            console.log(question.get('Question'));
+            console.log("\n\n\n");
+            getAnswers(quest.get('quest_id')).then((answer) => {
+                answer.forEach(ans => {
+                    console.log(ans.get('Answer'));
+                })
             })
         })
     })
-
-    // httpQuestion(req, res, 161);
 });
 
 module.exports = router;

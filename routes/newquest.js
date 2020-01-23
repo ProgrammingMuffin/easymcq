@@ -3,11 +3,7 @@ const Sequelize = require('sequelize');
 const VARS = require('../VARS')();
 const router = express.Router();
 const multer = require('multer');
-const modelAnswer = require('../models/answer');
-const modelQuestion = require('../models/question');
-const modelQuestionLibrary = require('../models/questionlibrary');
-const modelAnswerImage = require('../models/AnswerImage');
-const modelQuestionImage = require('../models/QuestionImage');
+const model = require('../model');
 const fs = require('fs'); //for the file moving stuff..
 const path = require('path'); //file extension
 
@@ -17,26 +13,11 @@ const moveFileToDir = (file_path, new_file_path) => {
     fs.rename(file_path, new_file_path, ()=>{});
 }
 
-
-const orm = new Sequelize(VARS.db, VARS.username, VARS.password, {
-    host: VARS.host,
-    dialect: VARS.dialect
-})
-
-orm.authenticate().then(() => {
-    console.log("Successfully connected to DB");
-}).catch(err => {
-    console.log("Error connecting to DB: " + err);
-})
-
-const Answer = modelAnswer(orm);
-const Question = modelQuestion(orm);
-const QuestionLibrary = modelQuestionLibrary(orm);
-const AnswerImage = modelAnswerImage(orm);
-const QuestionImage = modelQuestionImage(orm);
-
-Answer.__factory = {autoIncrementField: 'ans_id'}; // to add an auto increment field
-Answer.ans_id = '' // test after removing this to see if this is really necessary
+const Answer = model.Answer;
+const Question = model.Question;
+const QuestionLibrary = model.QuestionLibrary;
+const AnswerImage = model.AnswerImage;
+const QuestionImage = model.QuestionImage;
 
 //returns answer id if new answer is created.
 const newAnswer = (inputanswer, correct_flag) => {
@@ -44,20 +25,6 @@ const newAnswer = (inputanswer, correct_flag) => {
 }
 
 const newAnswerTransaction = (answers, correct_answer, files) => {
-    // return orm.transaction((transact) => {
-    //     flag = 0;
-    //     let ans_list = [];
-    //     console.log(files)
-    //     answers.forEach((ans) => {
-    //         if(ans == correct_answer){
-    //             flag = 1;
-    //         } else {
-    //             flag = 0;
-    //         }
-    //         ans_list.push(newAnswer(ans, flag));
-    //     })
-    //     return ans_list
-    // });
         answers.forEach((ans) => {
             if(ans == correct_answer){
                 flag = 1;
@@ -93,23 +60,6 @@ const newQuest = (inputquestion, answers, correct_answer, files) => {
                 addQuestionImage(quest_id.get('quest_id'), img)
             }
         })
-        // newAnswerTransaction(answers, correct_answer, files).then(
-        //     (result) => {
-        //         var i = 1; //initiating here cuz we need to iterate over every answer ID to insert an image there..
-        //         result.forEach(res => {
-        //             res.then(row => {
-        //                 pushQuestionLibrary(quest_id.get('quest_id'), row.get('ans_id')); //Push to QuestionLibrary Table
-        //                 files.forEach(img => {
-        //                     if(img.fieldname == ("" + i)){ //to convert it into a string
-        //                         addAnswerImage(row.get('ans_id'), img);
-        //                     }
-        //                     console.log(i)
-        //                 })
-        //                 i++;
-        //             });
-        //         })
-        //     }
-        // )
         answers.forEach(answer => {
             i = 1;
             if(answer == correct_answer){
