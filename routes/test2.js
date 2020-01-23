@@ -16,8 +16,6 @@ const UserQuestions = model.UserQuestions;
 const Question = model.Question;
 const QuestionLibrary = model.QuestionLibrary;
 const Answer = model.Answer;
-const QuestionImage = model.QuestionImage;
-const AnswerImage = model.AnswerImage;
 
 
 
@@ -28,7 +26,7 @@ const getQuestion = (quest_num) => {
 
 //get the answers
 const getAnswers = (quest_id) => {
-    return QuestionLibrary.findAll({where: {quest_id: quest_id}, include: [{model: Answer, as: 'Answer'}]});
+    return QuestionLibrary.findAll({where: {quest_id: quest_id}, include: [{model: Answer, as: 'Answer'}, {model: Question, as: 'Question'}]});
 }
 
 
@@ -41,6 +39,8 @@ router.get("/:testid/:quest", (req, res) => {
         getAnswers(quest.get('quest_id')).then((answer) => {
             answer.forEach(ans => {
                 console.log(ans.get('Answer'));
+                console.log(ans.get('Question'));
+                console.log("\n\n\n");
             })
         })
     })

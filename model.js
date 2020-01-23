@@ -21,13 +21,16 @@ const orm = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.
 const mAnswer = modelAnswer(orm);
 const mUserQuestions = modelUserQuestions(orm);
 const mQuestionLibrary = modelQuestionLibrary(orm);
+const mQuestion = modelQuestion(orm);
 
 mQuestionLibrary.belongsTo(mAnswer, {as: 'Answer', foreignKey: 'ans_id'});
 mAnswer.belongsTo(mQuestionLibrary, {as: 'QuestionLibrary', foreignKey: 'ans_id'});
+mQuestionLibrary.belongsTo(mQuestion, {as: 'Question', foreignKey: 'quest_id'});
+
 
 module.exports.Answer = mAnswer;
 module.exports.AnswerImage = modelAnswerImage(orm);
-module.exports.Question = modelQuestion(orm);
+module.exports.Question = mQuestion;
 module.exports.QuestionImage = modelQuestionImage(orm);
 module.exports.QuestionLibrary = mQuestionLibrary
 module.exports.Test = modelTest(orm);
