@@ -122,9 +122,10 @@ const newQuest = (inputquestion, answers, correct_answer, files) => {
                 files.forEach(img => {
                     if(img.fieldname == ("" + i)){
                         console.log(result.get('ans_id'));
-                        addAnswerImage(result.get('ans_id'), img).then(() => {
+                        setTimeout(()=>{
+                            addAnswerImage(result.get('ans_id'), img).then(() => {
                             console.log("successfully uploaded image: " + result.get('ans_id'));
-                        })
+                        }) }, 100);
                     }
                 })
                 i++;

@@ -10,10 +10,16 @@ module.exports = (orm) => {
         ans_id: {
             type: Sequelize.BIGINT,
             allowNull: false,
-            primaryKey: true
+            primaryKey: true,
+            references: {
+                model: 'Answer',
+                key: 'ans_id'
+            }
         }
     }, {
         timestamps: false,
-        freezeTableName: true
+        freezeTableName: true,
+        nest: true,
+        raw: true
     })
 }
