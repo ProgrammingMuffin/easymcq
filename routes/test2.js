@@ -3,9 +3,10 @@ const Sequelize = require('sequelize');
 const VARS = require('../VARS')();
 const router = express.Router();
 const model = require('../model');
-const http = require('http');
-const request = require('sync-request');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
+dotenv.config();
 
 const UserQuestions = model.UserQuestions;
 const Question = model.Question;
@@ -15,8 +16,8 @@ const Answer = model.Answer;
 
 
 //get the quest_id
-const getQuestionID = (quest_num) => {
-    return UserQuestions.findOne({where: {test_id: 4}, offset: (quest_num-1), limit: 1});
+const getQuestionID = (quest_num, test_id, user_id) => {
+    return UserQuestions.findOne({where: {test_id: 4, user_id: user_id}, offset: (quest_num-1), limit: 1});
 }
 
 const getQuestionText = (quest_id) => {
@@ -31,16 +32,22 @@ const getAnswers = (quest_id) => {
 
 router.get("/:testid/:quest", (req, res) => {
     var test_id = parseInt(req.params.testid);
-    var quest_num = parseInt(req.params.quest) - 1;
-    var quest_id = 161;
-
-    getQuestionID(2).then(quest => {
+    var quest_num = parseInt(req.params.quest);
+    var jwt_token = jwt.verify(req.cookies.jwttoken, process.env.JWT_SECRET);
+    var user_id = jwt_token.user_id;
+    var answer_array = [];
+    getQuestionID(quest_num, test_id, user_id).then(quest => {
         getQuestionText(quest.get('quest_id')).then(question => {
             console.log(question.get('Question'));
             console.log("\n\n\n");
             getAnswers(quest.get('quest_id')).then((answer) => {
                 answer.forEach(ans => {
-                    console.log(ans.get('Answer'));
+                    answer_array.push({answer: ans.get('Answer').get('answer')})
+                })
+                res.render("test", {
+                    quest_num: quest_num,
+                    question: question.get('Question').get('question'),
+                    answers: answer_array
                 })
             })
         })

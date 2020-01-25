@@ -4,12 +4,10 @@ module.exports = (orm) => {
     return orm.define('QuestionLibrary', {
         quest_id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
             primaryKey: true
         },
         ans_id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
             primaryKey: true,
             references: {
                 model: 'Answer',
