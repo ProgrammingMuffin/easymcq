@@ -2,11 +2,19 @@ const express = require('express');
 const router = express.Router();
 const model = require('../model');
 const sha256 = require('sha256');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const User = model.User;
 
-const getUser = (email, password) => {
+const getUsers = (email, password) => {
     return User.count({where: {email: email, password: password}});
+}
+
+const getUserID = (email) => {
+    return User.findOne({where: {email: email}});
 }
 
 
@@ -14,9 +22,13 @@ router.post("/login", (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
     var hashed_pass = sha256(password);
-    getUser(email, hashed_pass).then((count) => {
+    getUsers(email, hashed_pass).then((count) => {
         if(count == 1){
-            res.status(200).send("Logged in successfully!");
+            getUserID(email).then(user => {
+                jwt_hash = jwt.sign({user_id: user.get('user_id')}, process.env.JWT_SECRET);
+                res.cookie("jwttoken", jwt_hash, {httpOnly: true}); //make a HTTPONLY cookie
+                res.redirect("/user/dashboard");
+            })
         } else {
             res.status(200).send("Invalid Credentials");
         }

@@ -18,7 +18,7 @@ router.post("/create", (req, res) => {
     var collegename = req.body.collegename;
     var degree = req.body.degree;
     createUser(password, name, email, phone, DOB, collegename, degree);
-    res.redirect("/loginuser.html");
+    //res.redirect("/loginuser.html");
 });
 
 module.exports = router;

@@ -8,6 +8,7 @@ const modelQuestionLibrary = require('./models/questionlibrary');
 const modelTest = require('./models/test');
 const modelUser = require('./models/user');
 const modelUserQuestions = require('./models/userquestions');
+const modelTestInvite = require('./models/testinvite');
 const dotenv = require('dotenv');
 
 
@@ -22,17 +23,25 @@ const mAnswer = modelAnswer(orm);
 const mUserQuestions = modelUserQuestions(orm);
 const mQuestionLibrary = modelQuestionLibrary(orm);
 const mQuestion = modelQuestion(orm);
+const mTestInvite = modelTestInvite(orm);
+const mTest = modelTest(orm);
+const mUser = modelUser(orm);
+const mQuestionImage = modelQuestionImage(orm);
+const mAnswerImage = modelAnswerImage(orm);
+
 
 mQuestionLibrary.belongsTo(mAnswer, {as: 'Answer', foreignKey: 'ans_id'});
 mAnswer.belongsTo(mQuestionLibrary, {as: 'QuestionLibrary', foreignKey: 'ans_id'});
 mQuestionLibrary.belongsTo(mQuestion, {as: 'Question', foreignKey: 'quest_id'});
+mTestInvite.belongsTo(mTest, {as: 'Test', foreignKey: 'test_id'});
 
 
 module.exports.Answer = mAnswer;
-module.exports.AnswerImage = modelAnswerImage(orm);
+module.exports.AnswerImage = mAnswerImage;
 module.exports.Question = mQuestion;
-module.exports.QuestionImage = modelQuestionImage(orm);
+module.exports.QuestionImage = mQuestionImage;
 module.exports.QuestionLibrary = mQuestionLibrary
-module.exports.Test = modelTest(orm);
-module.exports.User = modelUser(orm);
+module.exports.Test = mTest;
+module.exports.User = mUser;
 module.exports.UserQuestions = mUserQuestions;
+module.exports.TestInvite = mTestInvite;
