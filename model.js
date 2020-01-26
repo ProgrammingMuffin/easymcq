@@ -9,6 +9,7 @@ const modelTest = require('./models/test');
 const modelUser = require('./models/user');
 const modelUserQuestions = require('./models/userquestions');
 const modelTestInvite = require('./models/testinvite');
+const modelQuestionPool = require('./models/questionpool');
 const dotenv = require('dotenv');
 
 
@@ -28,6 +29,7 @@ const mTest = modelTest(orm);
 const mUser = modelUser(orm);
 const mQuestionImage = modelQuestionImage(orm);
 const mAnswerImage = modelAnswerImage(orm);
+const mQuestionPool = modelQuestionPool(orm);
 
 
 mQuestionLibrary.belongsTo(mAnswer, {as: 'Answer', foreignKey: 'ans_id'});
@@ -45,3 +47,5 @@ module.exports.Test = mTest;
 module.exports.User = mUser;
 module.exports.UserQuestions = mUserQuestions;
 module.exports.TestInvite = mTestInvite;
+module.exports.QuestionPool = mQuestionPool;
+
