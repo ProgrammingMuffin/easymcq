@@ -17,6 +17,7 @@ const apply = require('./routes/apply');
 const applyaction = require('./routes/applyaction');
 const createtest = require('./routes/createtest');
 const selectquest = require('./routes/selectquest');
+const createpool = require('./routes/createpool');
 const multer = require('multer'); // for file upload handling
 const ejs = require('ejs');
 const dotenv = require('dotenv'); //To read the .env file.
@@ -40,6 +41,7 @@ app.set("view engine", "ejs");
 
 app.use("/admin", newquest);
 app.use("/admin", selectquest);
+app.use("/admin", createpool);
 app.use("/user", createuser);
 app.use("/test", test);
 app.use("/test", createtest);

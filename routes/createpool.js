@@ -6,8 +6,21 @@ const model = require('../model');
 const QuestionPool = model.QuestionPool;
 
 
-router.post("/createpool/test/:testid", (req, res) => {
+const createQuestionPool = (res, test_id, quest_list) => {
+    promises = [];
+    quest_list.forEach((quest_id) => {
+        promises.push(QuestionPool.create({test_id: test_id, quest_id: parseInt(quest_id)}));
+    });
+    Promise.all(promises).then(() => {
+        res.send("Added all questions to questionpool");
+    })
+}
 
+
+router.post("/createpool/test/:testid", (req, res) => {
+    var test_id = parseInt(req.params.testid);
+    var quest_list = req.body.questions;
+    createQuestionPool(res, test_id, quest_list);
 });
 
 
