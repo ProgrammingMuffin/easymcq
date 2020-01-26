@@ -3,6 +3,7 @@ const router = express.Router();
 const model = require('../model');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const session = require('../session');
 
 
 dotenv.config();
@@ -18,6 +19,9 @@ const createTest = (res, testname, proctor, duration, sched_start, sched_end) =>
 
 
 router.post("/create", (req, res) => {
+    if(!session.isLogged(req, "user")) {
+        res.redirect("../../login/admin");
+    }
     var testname = req.body.testname;
     var proctor = req.body.proctor;
     var duration = parseInt(req.body.duration);

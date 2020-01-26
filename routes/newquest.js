@@ -6,6 +6,7 @@ const multer = require('multer');
 const model = require('../model');
 const fs = require('fs'); //for the file moving stuff..
 const path = require('path'); //file extension
+const session = require('../session');
 
 // REUSABLE MODULES (LATER TO BE PUSHED TO A SEPERATE FILE)
 
@@ -88,6 +89,9 @@ const newQuest = (inputquestion, answers, correct_answer, files) => {
 }
 
 router.post("/newquest", (req, res) => {
+    if(!session.isLogged(req, "admin")) {
+        res.redirect("../../login/admin");
+    }
     newQuest(req.body.question, req.body.answers, req.body.correct, req.files);
     res.status(200).send("Question Added!");
 });

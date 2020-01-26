@@ -4,6 +4,7 @@ const model = require('../model');
 const sha256 = require('sha256');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const session = require('../session');
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ const getAdmins = (email, password) => {
 
 
 router.post("/login", (req, res) => {
+    if(session.isLogged(req, "admin")) {
+        res.redirect("../../admin/dashboard");
+    }
     var email = req.body.email;
     var password = req.body.password;
     var hashed_pass = sha256(password);
