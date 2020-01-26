@@ -3,6 +3,7 @@ const router = express.Router();
 const dotenv = require('dotenv');
 const model = require('../model');
 const jwt = require('jsonwebtoken');
+const session = require('../session');
 
 
 dotenv.config();
@@ -15,9 +16,16 @@ const getUserTests = (user_id) => {
 }
 
 router.get("/dashboard", (req, res) => {
+    //Early exit code if user isn't logged in
+    if(!session.isLogged(req, "user")) {
+        res.redirect("../../login/user");
+    }
+    
     var jwt_decrypt = jwt.verify(req.cookies.jwttoken, process.env.JWT_SECRET);
     var user_id = jwt_decrypt.user_id;
     var test_array = []
+
+
     getUserTests(user_id).then((testlist) => {
         testlist.forEach(test => {
             var test_details = test.get('Test');

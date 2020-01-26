@@ -9,15 +9,15 @@ const getquest = require('./routes/getquest');
 const createuser = require('./routes/createuser');
 const test = require('./routes/test2');
 const loginuser = require('./routes/loginuser');
-const serviceanswerid = require('./routes/serviceanswerid');
-const servicequestion = require('./routes/servicequestion');
-const serviceanswer = require('./routes/serviceanswer');
 const dashboard = require('./routes/dashboard');
 const apply = require('./routes/apply');
 const applyaction = require('./routes/applyaction');
 const createtest = require('./routes/createtest');
 const selectquest = require('./routes/selectquest');
 const createpool = require('./routes/createpool');
+const adminloginview = require('./routes/adminloginview');
+const userloginview = require('./routes/userloginview');
+const logout = require('./routes/logout');
 const multer = require('multer'); // for file upload handling
 const ejs = require('ejs');
 const dotenv = require('dotenv'); //To read the .env file.
@@ -33,12 +33,16 @@ app.use(cors()); //cross origin support
 app.use(bodyParser.json()); //this is required to parse HTTP POST Body
 app.use(bodyParser.urlencoded({extended: true}));
 app.use("/", express.static('public')); //serve static files present in the public directory.
+app.use("/css", express.static('public/css')); //serve static files present in the public directory.
 app.use(multer({dest: './uploads/images'}).any());
 
 
 app.set("view engine", "ejs");
 
 
+app.use("/login", adminloginview);
+app.use("/login", userloginview);
+app.use("/logout", logout);
 app.use("/admin", newquest);
 app.use("/admin", selectquest);
 app.use("/admin", createpool);
@@ -49,9 +53,6 @@ app.use("/user", loginuser);
 app.use("/user", dashboard);
 app.use("/apply", apply);
 app.use("/applyaction", applyaction);
-// app.use("/service/", serviceanswerid); //decommissioned
-// app.use("/service/", servicequestion); //decommissioned
-// app.use("/service/", serviceanswer); //decommissioned
 
 
 app.listen(port, () => { console.log("congratulations, your server is running on port " + port + " " + __dirname) });
