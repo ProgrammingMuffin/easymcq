@@ -15,7 +15,9 @@ const serviceanswer = require('./routes/serviceanswer');
 const dashboard = require('./routes/dashboard');
 const apply = require('./routes/apply');
 const applyaction = require('./routes/applyaction');
-const multer = require('multer');
+const createtest = require('./routes/createtest');
+const selectquest = require('./routes/selectquest');
+const multer = require('multer'); // for file upload handling
 const ejs = require('ejs');
 const dotenv = require('dotenv'); //To read the .env file.
 const cookieparser = require('cookie-parser');
@@ -36,10 +38,11 @@ app.use(multer({dest: './uploads/images'}).any());
 app.set("view engine", "ejs");
 
 
-app.use("/admin", newquest); //decommissioned
-// app.use("/admin", getquest); //decommissioned
+app.use("/admin", newquest);
+app.use("/admin", selectquest);
 app.use("/user", createuser);
 app.use("/test", test);
+app.use("/test", createtest);
 app.use("/user", loginuser);
 app.use("/user", dashboard);
 app.use("/apply", apply);
