@@ -11,6 +11,7 @@ const modelUserQuestions = require('./models/userquestions');
 const modelTestInvite = require('./models/testinvite');
 const modelQuestionPool = require('./models/questionpool');
 const modelAdmin = require('./models/admin');
+const modelUserAnswers = require('./models/useranswers');
 const dotenv = require('dotenv');
 
 
@@ -32,12 +33,14 @@ const mQuestionImage = modelQuestionImage(orm);
 const mAnswerImage = modelAnswerImage(orm);
 const mQuestionPool = modelQuestionPool(orm);
 const mAdmin = modelAdmin(orm);
+const mUserAnswers = modelUserAnswers(orm);
 
 
 mQuestionLibrary.belongsTo(mAnswer, {as: 'Answer', foreignKey: 'ans_id'});
 mAnswer.belongsTo(mQuestionLibrary, {as: 'QuestionLibrary', foreignKey: 'ans_id'});
 mQuestionLibrary.belongsTo(mQuestion, {as: 'Question', foreignKey: 'quest_id'});
 mTestInvite.belongsTo(mTest, {as: 'Test', foreignKey: 'test_id'});
+mQuestionPool.belongsTo(mQuestion, {as: 'Question', foreignKey: 'quest_id'});
 
 
 module.exports.Answer = mAnswer;
@@ -51,3 +54,4 @@ module.exports.UserQuestions = mUserQuestions;
 module.exports.TestInvite = mTestInvite;
 module.exports.QuestionPool = mQuestionPool;
 module.exports.Admin = mAdmin;
+module.exports.UserAnswers = mUserAnswers;

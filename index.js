@@ -21,6 +21,10 @@ const loginadmin = require('./routes/loginadmin');
 const admindashboard = require('./routes/admindashboard');
 const addquest = require('./routes/addquest');
 const createtestview = require('./routes/createtestview');
+const verifyview = require('./routes/verifyview');
+const verify = require('./routes/verify');
+const generatequests = require('./routes/generatequests');
+const save = require('./routes/save');
 const multer = require('multer'); // for file upload handling
 const ejs = require('ejs');
 const dotenv = require('dotenv'); //To read the .env file.
@@ -53,9 +57,13 @@ app.use("/admin", newquest);
 app.use("/admin", selectquest);
 app.use("/admin", createpool);
 app.use("/admin", admindashboard);
+app.use("/userquests", generatequests);
 app.use("/user", createuser);
 app.use("/test", test);
 app.use("/test", createtest);
+app.use("/verifyview", verifyview);
+app.use("/verify", verify);
+app.use("/save", save);
 app.use("/user", loginuser);
 app.use("/user", dashboard);
 app.use("/apply", apply);
