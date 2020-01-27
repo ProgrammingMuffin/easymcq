@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const newquest = require('./routes/newquest2');
+const getquest = require('./routes/getquest');
 const createuser = require('./routes/createuser');
 const test = require('./routes/test2');
 const loginuser = require('./routes/loginuser');
@@ -17,14 +18,6 @@ const createpool = require('./routes/createpool');
 const adminloginview = require('./routes/adminloginview');
 const userloginview = require('./routes/userloginview');
 const logout = require('./routes/logout');
-const loginadmin = require('./routes/loginadmin');
-const admindashboard = require('./routes/admindashboard');
-const addquest = require('./routes/addquest');
-const createtestview = require('./routes/createtestview');
-const verifyview = require('./routes/verifyview');
-const verify = require('./routes/verify');
-const generatequests = require('./routes/generatequests');
-const save = require('./routes/save');
 const multer = require('multer'); // for file upload handling
 const ejs = require('ejs');
 const dotenv = require('dotenv'); //To read the .env file.
@@ -46,27 +39,31 @@ app.use(multer({dest: './uploads/images'}).any());
 
 app.set("view engine", "ejs");
 
-
+//  /login/admin
 app.use("/login", adminloginview);
+//  /login/user
 app.use("/login", userloginview);
+//  /logout/
 app.use("/logout", logout);
-app.use("/admin", loginadmin);
-app.use("/addquest", addquest);
-app.use("/createtest", createtestview);
+//  /admin/newquest
 app.use("/admin", newquest);
+//  /admin/test/:testid/selectquest
 app.use("/admin", selectquest);
+// /admin/createpool/test/:testid
 app.use("/admin", createpool);
-app.use("/admin", admindashboard);
-app.use("/userquests", generatequests);
+// /user/create
 app.use("/user", createuser);
+// /test/:testid/:quest
 app.use("/test", test);
+// /test/create
 app.use("/test", createtest);
-app.use("/verifyview", verifyview);
-app.use("/verify", verify);
-app.use("/save", save);
+// /user/login
 app.use("/user", loginuser);
+// /user/dashboard
 app.use("/user", dashboard);
+// /apply//
 app.use("/apply", apply);
+// /applyaction/test/:testid
 app.use("/applyaction", applyaction);
 
 
