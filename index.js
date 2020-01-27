@@ -25,6 +25,7 @@ const verifyview = require('./routes/verifyview');
 const verify = require('./routes/verify');
 const generatequests = require('./routes/generatequests');
 const save = require('./routes/save');
+const evaluate = require('./routes/evaluate');
 const multer = require('multer'); // for file upload handling
 const ejs = require('ejs');
 const dotenv = require('dotenv'); //To read the .env file.
@@ -57,6 +58,7 @@ app.use("/admin", newquest);
 app.use("/admin", selectquest);
 app.use("/admin", createpool);
 app.use("/admin", admindashboard);
+app.use("/evaluate", evaluate);
 app.use("/userquests", generatequests);
 app.use("/user", createuser);
 app.use("/test", test);
