@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const model = require('../model');
+const session = require('../session');
 
 
 const Question = model.Question;
@@ -22,6 +23,9 @@ const resolveType = (type) => {
 }
 
 router.get("/test/:testid/selectquest", (req, res) => {
+    if(!session.isLogged(req, "admin")) {
+        res.redirect("../../login/admin");
+    }
     var test_id = parseInt(req.params.testid);
     var question_list = [];
     getQuestions().then((questions) => {

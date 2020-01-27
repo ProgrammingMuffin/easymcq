@@ -23,6 +23,15 @@ module.exports = (orm) => {
         },
         sched_end: {
             type: Sequelize.TIME
+        },
+        easy: {
+            type: Sequelize.SMALLINT
+        },
+        medium: {
+            type: Sequelize.SMALLINT
+        },
+        hard: {
+            type: Sequelize.SMALLINT
         }
     }, {
         freezeTableName: true,

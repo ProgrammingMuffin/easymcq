@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const model = require('../model');
-
+const session = require('../session');
 
 
 const Question = model.Question;
@@ -33,6 +33,9 @@ const createQuestion = (res, question, answers, correct, level) => {
 }
 
 router.post("/newquest", (req, res) => {
+    if(!session.isLogged(req, "admin")) {
+        res.redirect("../../login/admin");
+    }
     var question = req.body.question;
     var answers = req.body.answers;
     var correct = req.body.correct;

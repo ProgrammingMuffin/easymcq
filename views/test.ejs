@@ -6,9 +6,9 @@
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
         crossorigin="anonymous">
-        <script 
-        src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" 
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
         crossorigin="anonymous"></script>
         <script 
         src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
@@ -21,28 +21,46 @@
         <link href="/css/test.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <input type="hidden" id="test_id" value="<%= test_id %>" />
         <div class="topbar" >
-            Question Number <%= quest_num %>
             <div class="timer" >
                 05:30
             </div>
         </div>
-        <div class="container mt-5" >
-            <div class="alert alert-danger" class="question" role="alert" >
-                <input type="hidden" value="<%= quest_num %>" />
-                <%= question %>
+        <% for(i=0;i < questions.length;i++) { %>
+            <div class="container mt-5" >
+            <div class="alert alert-info" class="question" role="alert" >
+                <%= i+1 %>) <%= questions[i].question %>
             </div>
             <div class="answerarea" >
-                
-                <% answers.forEach(answer => { %>
+                <% questions[i].answers.forEach(answer => { %>
                     <div class="answer">
-                        <input type="hidden" value="<%= answer.ans_id %>" />
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="answer1">
+                        <input class="form-check-input" type="radio" name="option<%= i+1 %>" id="inlineRadio1" value="<%= answer.ans_id %>">
                         <label class="form-check-label" for="inlineRadio1"><%= answer.answer %></label>
                     </div>    
                 <% }) %>
 
+                <input type="button" id="<%= i+1 %>" name="<%= questions[i].quest_id %>" value="save" />
+
             </div>
         </div>
+        <% } %>
+        <a href="/evaluate/<%= test_id %>" >Submit</a>
+        <script type="text/javascript" >
+            $('input[type="button"]').on('click', function(e){
+                var ans_id = $('input[name="option' + e.target.id + '"]:checked').val();
+                var quest_id = e.target.name;
+                $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: "/save",
+                    data: {
+                        test_id: $('#test_id').val(),
+                        ans_id: ans_id,
+                        quest_id: quest_id
+                    }
+                })
+            });
+        </script>
     </body>
 </html>
