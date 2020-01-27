@@ -12,6 +12,7 @@ dotenv.config();
 const Test = model.Test;
 const TestInvite = model.TestInvite;
 const UserQuestions = model.UserQuestions;
+const Scoreboard = model.Scoreboard;
 
 
 const verifyProctor = (res, test_id, user_id, proctor) => {
@@ -44,7 +45,16 @@ router.post("/:testid", (req, res) => {
     var proctor = req.body.proctor;
     var jwttoken = req.cookies.jwttoken;
     var user_id = parseInt(jwt.verify(jwttoken, process.env.JWT_SECRET).user_id);
-    verifyProctor(res, testid, user_id, proctor);
+    //check if test is taken
+    Scoreboard.count({where: {test_id: test_id, user_id: user_id}})
+    .then((taken) => {
+        if(taken == 0) {
+            //test is not taken
+            verifyProctor(res, testid, user_id, proctor);
+        } else {
+            //handle error, test is already taken
+        }
+    })
 });
 
 module.exports = router;

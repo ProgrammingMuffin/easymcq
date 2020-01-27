@@ -145,6 +145,33 @@ INSERT INTO `QuestionPool` VALUES (17,170),(27,170),(17,171),(27,171),(17,172),(
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Scoreboard`
+--
+
+DROP TABLE IF EXISTS `Scoreboard`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Scoreboard` (
+  `user_id` int(11) NOT NULL,
+  `test_id` int(11) NOT NULL,
+  `score` mediumint(9) DEFAULT NULL,
+  PRIMARY KEY (`user_id`,`test_id`),
+  KEY `test_id` (`test_id`),
+  CONSTRAINT `scoreboard_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `scoreboard_ibfk_2` FOREIGN KEY (`test_id`) REFERENCES `test` (`test_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Scoreboard`
+--
+
+LOCK TABLES `Scoreboard` WRITE;
+/*!40000 ALTER TABLE `Scoreboard` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Scoreboard` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Test`
 --
 
@@ -299,4 +326,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-27 15:08:03
+-- Dump completed on 2020-01-27 23:29:49
